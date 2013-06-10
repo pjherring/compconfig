@@ -210,8 +210,8 @@ map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove
-map <leader>] :tabNext<CR>
-map <leader>[ :tabprevious<CR>
+map <leader>] :tabn<CR>
+map <leader>[ :tabp<CR>
 
 map <leader>ev :edit ~/.vimrc<CR>
 map <leader>sv :source ~/.vimrc<CR>
@@ -396,3 +396,5 @@ function! <SID>BufcloseCloseIt()
      execute("bdelete! ".l:currentBufNum)
    endif
 endfunction
+
+execute pathogen#infect()

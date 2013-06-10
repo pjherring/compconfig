@@ -1,0 +1,60 @@
+#! /bin/sh
+
+TIMESTAMP=`date +%Y%m%d%H%M%S`
+MONGO_LOG_BASE="$HOME/mongo-log"
+MONGO_LOG_TS="$MONGO_LOG_BASE-$TIMESTAMP"
+RABBITMQ_LOG_BASE="$HOME/rabbitmq-log"
+RABBITMQ_LOG_TS="$RABBITMQ_LOG_BASE-$TIMESTAMP"
+DO_START=0
+
+if [[ $1 == "stop" ]]; then
+  DO_START=0
+elif [[ $1 == "start" ]]; then
+  DO_START=1
+else
+  echo "Usage: sqsp-services-manager [start|stop]"
+  exit 1
+fi
+
+function killService {
+  echo "Killing $1"
+  ps -ef | grep $1 | grep -v grep | awk '{print $2}' | xargs kill -9
+  if [ -n "$2" ]; then
+    LOG=`\ls $2`
+    if [[ -n $LOG ]]; then
+      rm $2
+    fi
+  fi
+}
+
+function startService {
+  echo "Starting $1, logging to $2"
+  nohup $1 > $2 2>%1 &
+}
+
+function testLastSuccess {
+  if [ $1 -gt 0 ]; then
+    echo "Error starting up $2. Exiting"
+    more $3
+
+    killService mongod $MONGO_LOG_BASE
+    killService rabbitmq-server $RABBITMQ_LOG_BASE
+    killService /Applications/Couchbase\ Server.app
+
+    exit 1
+  fi
+}
+
+if [ $DO_START -gt 0 ]; then
+  echo "STARTING"
+  startService mongod $MONGO_LOG_TS
+  testLastSuccess $? mongod $MONGO_LOG_TS
+  startService rabbitmq-server $RABBITMQ_LOG_TS
+  testLastSuccess $? rabbitmq-server $RABBITMQ_LOG_TS
+  open /Applications/Couchbase\ Server.app 
+else
+  killService mongod "$MONGO_LOG_BASE*"
+  killService rabbitmq-server "$RABBITMQ_LOG_BASE*"
+  killService "Couchbase"
+fi
+
