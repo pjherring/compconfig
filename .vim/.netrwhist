@@ -1,0 +1,9 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_1='/Users/pjherring/anthonygenerated'
+let g:netrw_dirhist_2='/Users/pjherring/sqsp/v6/site-server/src/main/webapp/universal/scripts-v6'
+let g:netrw_dirhist_3='/Users/pjherring/sqsp/v6/site-server/src/main/webapp/universal'
+let g:netrw_dirhist_4='/Users/pjherring/sqsp/v6/site-server/build-scripts'
+let g:netrw_dirhist_5='/Users/pjherring/sqsp/v6'
+let g:netrw_dirhist_6='/Users/pjherring/compare'
+let g:netrw_dirhist_7='/Users/pjherring/sqsp/v6/site-server'
